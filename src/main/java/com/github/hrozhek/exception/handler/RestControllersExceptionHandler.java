@@ -1,6 +1,7 @@
 package com.github.hrozhek.exception.handler;
 
 import com.github.hrozhek.exception.CurrencyNotFoundException;
+import com.github.hrozhek.exception.ServiceResponseException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,6 +20,15 @@ public class RestControllersExceptionHandler {
     public Map<String, String> handleCurrencyNotFoundException(CurrencyNotFoundException ex) {
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("error", "Currency Not Found");
+        errorResponse.put("message", ex.getMessage());
+        return errorResponse;
+    }
+
+    @ExceptionHandler(ServiceResponseException.class)
+    @ResponseStatus(HttpStatus.BAD_GATEWAY)
+    public Map<String, String> handleServiceResponseException(ServiceResponseException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", "External Service Error");
         errorResponse.put("message", ex.getMessage());
         return errorResponse;
     }
